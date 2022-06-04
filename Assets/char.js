@@ -5,9 +5,9 @@
 var TailPrefab : GameObject;
 var ApplePrefab : GameObject;
 
-private var counter = 0;							// number of tail elements
+private var counter = 0;					// number of tail elements
 private var lastChain : GameObject = null;	// last tail in the end of snake chain
-private var moveSpeed = 1.7;					// movement speed of snake (gamespeed)
+private var moveSpeed = 1.7;				// movement speed of snake (gamespeed)
 
 function snake_addTail() {
 	if(lastChain == null)
@@ -15,20 +15,19 @@ function snake_addTail() {
 
 	var newChain : GameObject = Instantiate(TailPrefab, lastChain.transform.position - lastChain.transform.forward*0.5, Quaternion(0,0,0,0));
 	newChain.transform.rotation = lastChain.transform.rotation;
-	var joint = newChain.GetComponent(HingeJoint);
+	var joint : HingeJoint = newChain.GetComponent(HingeJoint);
 	if(joint != null) {
-		joint.connectedBody = lastChain.rigidbody;
+		joint.connectedBody = lastChain.GetComponent.<Rigidbody>();
 		lastChain = newChain;
 	}
 	newChain.name = "Tail " + counter;
 	counter++;
 	
-	rigidbody.mass++; // make the head weight greater so it can carry it's tail... lol
+	GetComponent.<Rigidbody>().mass++; // make the head weight greater so it can carry it's tail... lol
 	moveSpeed += 0.05;
 }
 
 function Start () {
-	// BUG: add few joints or it won't listen to turns :(
 	snake_addTail();
 	snake_addTail();
 }
@@ -52,7 +51,7 @@ function OnCollisionEnter(c : Collision) {
 		} else {
 			chew = GameObject.Find("chew2");
 		}
-		chew.audio.Play();
+		chew.GetComponent.<AudioSource>().Play();
 		Destroy(c.gameObject);
 		snake_addTail();
 		return;
@@ -68,7 +67,7 @@ function Update () {
 	/*var fwd = transform.forward*moveSpeed*dy;
 	rigidbody.AddForce(fwd, ForceMode.Impulse);*/
 	//rigidbody.AddForce(transform.forward*moveSpeed, ForceMode.Force);
-	rigidbody.velocity = transform.forward*moveSpeed;
+	GetComponent.<Rigidbody>().velocity = transform.forward*moveSpeed;
 	
 	// turning
 	var turnSpeed = 1;
@@ -78,7 +77,7 @@ function Update () {
 		transform.rotation *= Quaternion.Euler(0, -Input.acceleration.y*Time.deltaTime*turnSpeed, 0);
 	} else { // pc
 		if(dx != 0) {
-			rigidbody.AddTorque(transform.up*turnSpeed*counter*dx, ForceMode.Impulse);
+			GetComponent.<Rigidbody>().AddTorque(transform.up*turnSpeed*(counter + 1)*dx, ForceMode.Impulse);
 		}
 	}
 	

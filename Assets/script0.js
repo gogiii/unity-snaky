@@ -8,7 +8,7 @@ var object : Rigidbody;
 function Start () {
 	for(var i = 0; i<2; i++) {
 		var obj : Rigidbody = Instantiate(object, Vector3(Random.Range(-2,2), 1, Random.Range(-2,2)), Quaternion(0,0,0,0));
-		obj.gameObject.renderer.material.color = Color(Random.value, Random.value, Random.value);
+		obj.gameObject.GetComponent.<Renderer>().material.color = Color(Random.value, Random.value, Random.value);
 	}
 }
 
@@ -70,6 +70,6 @@ function Update () {
 	// spawn on tap
 	if(Input.GetMouseButtonDown(0) && !isDragging) {
 		var obj : Rigidbody = Instantiate(object, hit.point + Vector3(0,1,0), Quaternion(0,0,0,0));
-		obj.gameObject.renderer.material.color = Color(Random.value, Random.value, Random.value);
+		obj.gameObject.GetComponent.<Renderer>().material.color = Color(Random.value, Random.value, Random.value);
 	}
 }
